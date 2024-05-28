@@ -13,7 +13,7 @@ inca_king <- inca %>% filter(county_name == "King County") %>% mutate(Location =
 totle_rate_trend <- ggplot() +
   geom_line(inca_state, mapping=aes(x=year, y=total_jail_pop_rate, linetype = Location)) +
   geom_line(inca_king, mapping=aes(x=year, y=total_jail_pop_rate, linetype = Location)) +
-  labs(x="Year", y="Jail Rate (per 100,000)", title = "Jail Rate Over Time in Washington State") +
+  labs(x="Year", y="Jail Rate (per 100,000)", title = "A Comparison of Jail Rates in WA State and King County, WA 1990-2018") +
   theme(legend.position="right")
 
 totle_rate_trend

@@ -1,71 +1,160 @@
 ---
 title: "A3: Incarceration"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ### Introduction
 
-An introduction of the problem domain and a description of the variable(s) you are choosing to analyze (and why!)
+One representative example illustrating racism in the United States is its justice system.
+A complex of biases and systemic inequalities disproportionately affects people of color.
+The media have well documented and discussed the data showing that Black and Hispanic individuals are incarcerated at much higher rates than white individuals.
+However, the Asian American and Pacific Islander (AAPI) population, also a racial minority, has been largely neglected.
+As a practice assignment for my study in Data Science, I am analyzing incarceration rates in counties over USA collected by The Vera Institute of Justice from 1990 to 2010, focusing on the jail rates of the AAPI population in Washington State.
+For this purpose, I have chosen five variables:
+
+1\.
+Years (1990-2018): to observe the trend of jail rate changes over the years.
+The period from 1990 to 2018 has the most complete data in the dataset.
+
+2\.
+Jail rates (national, WA, King County, AAPI): I will compare the jail rates across different regions and races.
+
+3\.
+Washington State: I aim to gather information regarding the safety of my state and its evolving trends.
+
+4\.
+AAPI population: The AAPI community is often considered an invisible ethnic group with less reporting and discussion.
+
+5\.
+County in WA (King County): King County is the most populated and has the highest socioeconomic status in WA.
+Comparing data from King County to the entire state can provide insights into the socioeconomic impact on incarceration.
 
 ### Summary Information
 
-Write a summary paragraph of findings that includes the 5 values calculated from your summary information R script
+From the smaller dataset about prison/jail population per 100,000 people (rate) per county/state starting in 1990, I filtered the data and generated a table including the total jail rates and rates specifically for the AAPI population in each of the 50 states from 1990 to 2018.
+The data was sorted by state and ranked Washington (WA) nationwide.
+The following summary information was calculated by determining the average rates for the total population and the AAPI population in the nation, in WA, and in King County:
 
-These will likely be calculated using your DPLYR skills, answering questions such as: 
+1\.
+National Average Jail Rates: The national average jail rates increased by 46.6%, from 250.35 per 100,000 in 1990 to 366.89 per 100,000 in 2018.
 
-- What is the average value of my variable across all the counties (in the current year)?
-- Where is my variable the highest / lowest?
-- How much has my variable change over the last N years?
+2\.
+Washington State Jail Rates: In WA, the jail rates increased by 29.2%, from 218.21 per 100,000 in 1990 to 282.52 per 100,000 in 2018.
 
-Feel free to calculate and report values that you find relevant. Again, remember that the purpose is to think about how these measure of incarceration vary by race.
+3\.
+King County Jail Rates: In King County, WA, the total jail rates increased by only 5.8%, from 187.11 per 100,000 in 1990 to 197.99 per 100,000 in 2018.
+
+4\.
+Comparison to National Rates: The increase in WA is significantly less than the national level.
+Consequently, WA's rank dropped from 15th to 32nd.
+Notably, the rate in King County showed almost no increase from 1990 to 2018, starting from an already low baseline in 1990.
+
+5\.
+AAPI Jail Rates - National: The national average jail rates for the AAPI population increased by 112.2%, from 78.88 per 100,000 in 1990 to 167.39 per 100,000 in 2018.
+
+6\.
+AAPI Jail Rates - Washington: In WA, the jail rates for the AAPI population increased by 156.2%, from 64.04 per 100,000 in 1990 to 164.11 per 100,000 in 2018.
+
+7\.
+AAPI Jail Rates - King County: In King County, WA, the jail rates for the AAPI population increased by 119.4%, from 26.85 per 100,000 in 1990 to 58.81 per 100,000 in 2018.
+
+8\.
+Significance of AAPI Rates: Although the jail rates for the AAPI population are lower than the overall national, WA state, and King County levels, the increase is significantly large.The national AAPI jail rates increased 2.4 times of the overall national rate increase,5.3 times the rate increase in WA, and 20.5 times the rate increase in King County.
+
+Here is the summary table.
+
+```{r, warning=FALSE, echo = FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+dataset <- read.csv("https://raw.githubusercontent.com/melaniewalsh/Neat-Datasets/main/us-prison-jail-rates-1990.csv")
+```
+
+```{r warning=FALSE, echo=FALSE}
+suppressMessages({
+  source("./summary.R")
+  knitr::kable(summary, format = "markdown")
+})
+```
 
 ### The Dataset
 
-Who collected the data?  
-How was the data collected or generated?  
-Why was the data collected?  
-How many observations (rows) are in your data?  
-How many features (columns) are in the data?  
-What, if any, ethical questions or questions of power do you need to consider when working with this data?  
-What are possible limitations or problems with this data?   (at least 200 words)
+> Who collected the data?\
+> The Vera Institute of Justice, a nonprofit national research and policy organization and an advocator in criminal justice research.
 
+> How was the data collected or generated?\
+> The dataset was assembled using data collected by the US Department of Justice Bureau of Justice Statistics (BJS), supplemented with data from state departments of correction.
+> Jail data comes from the Annual Survey of Jails (ASJ), Census of Jails (COJ), and population and admissions variables from the Death in Custody Reporting Program (DCRP).
+> The ASJ and COJ data are combined for jail variables, while separate variables are created using the DCRP data.
+> The dataset was developed through a series of updates and expansions.
+> The initial dataset, funded by the Robert W. Wilson Charitable Trust, was released in 2015 and included BJS data covering all jails since 1970 and newer data since 1982 from major jails.
+> It was updated in 2016-2018 through a grant from the MacArthur Foundation and further expanded in 2018 through a grant from Google.com to include both jail and prison incarceration information.
+> In 2020, the datasets were updated and modified twice, with the final version released in September 2020.
+
+> Why was the data collected?\
+> This dataset provides county-level data on prison and jail incarceration and related measures over time for the entire United States.
+> Research on incarceration has traditionally centered on state-level data, but county officials, such as judges, prosecutors, and jail managers, play a significant role in determining how communities use incarceration.
+> Therefore, county-level variability offers the detail needed to study the causes and consequences of high incarceration rates across the United States.
+
+> How many observations (rows) are in your data?\
+> There are `r nrow(dataset)` observations in our data.
+
+> How many features (columns) are in the data?\
+> There are `r ncol(dataset)` feature in the date
+
+> What, if any, ethical questions or questions of power do you need to consider when working with this data?\
+> The focus of my analysis is to explore racism, especially towards the AAPI community, within the justice system by analyzing jail rate data from 1990 to 2010.
+> It is crucial to ensure that no prejudice or bias influences the analysis.
+
+> What are possible limitations or problems with this data?\
+> In summary, the dataset and analysis reveal that jail rates from 1990 to 2010 increased nationwide and in Washington State.
+> The increase in jail rates for the Asian American and Pacific Islander (AAPI) group is significantly higher than the overall national rates (2.4 times), WA state rates (5.3 times), and King County rates (20.5 times).
+> This rapid increase challenges the stereotype that the AAPI group has low criminal and incarceration rates.
+> The high increase might be related to the expanding AAPI population from 1990 to 2010, especially in WA and King County.
+> \> However, the dataset lacks population data and detailed background information about the AAPI community.
+> \> Further grouping the AAPI population by ethnic and cultural background could provide more insights into the significant increase in jail rates and help address the disproportionate inequalities.
+> \> Additionally, this analysis is based solely on jail rates, without considering prison rates, which might reveal discrepancies between jail and prison admissions systems.
 
 ### Trends Over Time Chart
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
-
-The first chart that you will create and include will show the trend over time of your variable/topic. Think carefully about what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
-
-- Show more than one, but fewer than ~10 trends
-  - This may mean showing the same measure for different locations or different racial groups. Think carefully about a meaningful comparison of locations (e.g., the top 10 counties in a state, top 10 states, etc.)
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear legend title
-
-When we say "clear" or "human readable" titles and labels, that means that you should not just display the variable name.
-
-Here's an example of how to run an R script inside an RMarkdown file:
-
-``````{r, echo = FALSE, code = readLines("chart1_example.R")}
+```{r, warning=FALSE, echo = FALSE}
+suppressMessages({
+source("./Chart_1_trends.R")
+totle_rate_trend
+})
 ```
+
+This chart compares the jail rates between Washington State and King County, WA, the most populous county with the highest socioeconomic status in the state.
+Generally, King County's jail rates are consistently lower than those of Washington State as a whole, with the gap widening notably since 2000.
+Both regions exhibit similar fluctuations in rates, reaching peaks around the early 2000s.
+However, King County's rates sharply decline thereafter, returning to levels similar to those of 1990, while Washington State experiences a slower decline, resulting in increased jail rates overall
 
 ### Variable Comparison Chart
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+```{r, warning=FALSE, echo = FALSE}
+suppressMessages({
+source("./Chart_2_comparison.R")
+rate_comparison
+})
+```
 
-The second chart that you will create and include will show how two different (continuous) variables are related to one another. Again, think carefully about what such a comparison means and what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
-
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- If you choose to add a color encoding (not required), you need a legend for your different color and a clear legend title
+I've included this chart to highlight the jail rates among the AAPI population as a comparison to the overall rates in each county in WA State.
+Generally, across most counties, the AAPI rates are significantly lower than the overall rates.
+However, in a few counties, the AAPI rates exceed the overall rates, notably with a striking high in Skamania County.
+Organizing the counties by geographical location (e.g. West and East side), socioeconomic status, or population could offer further insights
 
 ### Map
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+```{r, warning=FALSE, echo = FALSE}
+suppressMessages({
+source("./Chart3_map.R")
+rate_map
+})
+```
 
-The last chart that you will create and include will show how a variable is distributed geographically. Again, think carefully about what such a comparison means and what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
-
-- Your map needs a title
-- Your color scale needs a legend with a clear label
-- Use a map based coordinate system to set the aspect ratio of your map
-
+A map provides a direct and clear illustration of the geographic distribution of a variable.
+This map demonstrates the jail rates in every county in Washington State, revealing higher rates in Eastern Washington, with the highest rates in Yakima and Ferry counties.
